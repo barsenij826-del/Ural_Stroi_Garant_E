@@ -1,0 +1,633 @@
+\<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Уралстройгарант — Строим объекты любой сложности</title>
+    <meta name="description" content="Реальные проекты строительной компании из Екатеринбурга. От АЗС до ТЦ «Покровский Пассаж». Без пафоса — только работа.">
+
+    <!-- Шрифты -->
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+
+    <style>
+        /* ===== ГЛОБАЛЬНЫЕ СТИЛИ ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --olive: #5D6B4A;
+            --beige: #F9F5F0;
+            --terracotta: #B85E4A;
+            --dark: #2D2D2D;
+            --text-dark: #333;
+            --text-light: #555;
+            --shadow: 0 6px 25px rgba(0,0,0,0.08);
+            --transition: all 0.6s cubic-bezier(0.17, 0.67, 0.88, 1);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--beige);
+            color: var(--text-dark);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        section {
+            padding: 100px 0;
+        }
+
+        h1, h2, h3 {
+            font-family: 'Cormorant Garamond', serif;
+            font-weight: 600;
+            line-height: 1.2;
+        }
+
+        h1 { font-size: 3.2rem; }
+        h2 { font-size: 2.2rem; margin-bottom: 20px; }
+        h3 { font-size: 1.6rem; margin-bottom: 15px; }
+        p { font-size: 1.1rem; margin-bottom: 18px; }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .btn {
+            display: inline-block;
+            background: var(--terracotta);
+            color: white;
+            padding: 14px 30px;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: var(--transition);
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            background: #A04E3C;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(184, 94, 74, 0.4);
+        }
+
+        /* ===== ШАПКА ===== */
+        header {
+            background: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+        }
+
+        .logo {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--olive);
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 30px;
+        }
+
+        nav a {
+            color: var(--text-dark);
+            font-weight: 500;
+            position: relative;
+            padding: 8px 0;
+        }
+
+        nav a:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--terracotta);
+            transition: var(--transition);
+        }
+
+        nav a:hover:after {
+            width: 100%;
+        }
+
+        /* ===== ГЕРОЙ ===== */
+        .hero {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            background: linear-gradient(rgba(29, 29, 29, 0.8), rgba(29, 29, 29, 0.9)), url('https://images.unsplash.com/photo-1560448205-e02f56c1a268?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            text-align: center;
+            padding: 0 20px;
+        }
+
+        .hero-content {
+            max-width: 700px;
+            animation: fadeInUp 1.2s ease;
+        }
+
+        .hero h1 {
+            font-size: 3.8rem;
+            margin-bottom: 20px;
+            text-shadow: 0 4px 10px rgba(0,0,0,0.5);
+        }
+
+        .hero p {
+            font-size: 1.4rem;
+            opacity: 0.9;
+            margin-bottom: 40px;
+        }
+
+        .hero-btns {
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+            flex-wrap: wrap;
+        }
+
+        /* ===== БЛОКИ С АНИМАЦИЕЙ ===== */
+        .section {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+
+        .section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* ===== ПРОЕКТЫ ===== */
+        .projects {
+            background: white;
+        }
+
+        .project-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .project-card {
+            background: var(--beige);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+
+        .project-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 35px rgba(0,0,0,0.1);
+        }
+
+        .project-img {
+            height: 200px;
+            background: #eee;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--olive);
+            font-weight: bold;
+        }
+
+        .project-info {
+            padding: 25px;
+        }
+
+        .project-info h3 {
+            color: var(--dark);
+            margin-bottom: 12px;
+        }
+
+        .project-info p {
+            color: var(--text-light);
+            font-size: 1rem;
+        }
+
+        /* ===== УСЛУГИ ===== */
+        .services {
+            background: var(--beige);
+        }
+
+        .service-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+        }
+
+        .service-item {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+
+        .service-item:hover {
+            transform: translateY(-5px);
+        }
+
+        .service-icon {
+            font-size: 2.4rem;
+            color: var(--olive);
+            margin-bottom: 20px;
+        }
+
+        /* ===== О КОМПАНИИ ===== */
+        .about {
+            background: white;
+        }
+
+        .about-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 50px;
+            align-items: center;
+        }
+
+        .about-text h2 {
+            color: var(--dark);
+            margin-bottom: 25px;
+        }
+
+        .about-text p {
+            margin-bottom: 20px;
+            font-size: 1.1rem;
+        }
+
+        /* ===== КОНТАКТЫ ===== */
+        .contact {
+            background: var(--olive);
+            color: white;
+        }
+
+        .contact-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+        }
+
+        .contact-info h3 {
+            color: white;
+            margin-bottom: 25px;
+        }
+
+        .contact-details {
+            margin: 25px 0;
+        }
+
+        .contact-item {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 18px;
+        }
+
+        .contact-item i {
+            color: var(--terracotta);
+            font-size: 1.4rem;
+            min-width: 24px;
+        }
+
+        .contact-form input,
+        .contact-form textarea {
+            width: 100%;
+            padding: 14px 16px;
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 6px;
+            background: rgba(255,255,255,0.1);
+            color: white;
+            font-family: inherit;
+            margin-bottom: 16px;
+        }
+
+        .contact-form textarea {
+            height: 140px;
+            resize: vertical;
+        }
+
+        /* ===== ФУТЕР ===== */
+        footer {
+            background: var(--dark);
+            color: #aaa;
+            padding: 40px 0 20px;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .footer-col h4 {
+            color: white;
+            margin-bottom: 20px;
+            font-size: 1.2rem;
+            position: relative;
+        }
+
+        .footer-col h4:after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 0;
+            width: 40px;
+            height: 2px;
+            background: var(--terracotta);
+        }
+
+        .requisites {
+            background: rgba(255,255,255,0.05);
+            padding: 20px;
+            border-radius: 6px;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            font-size: 0.9rem;
+        }
+
+        /* ===== АНИМАЦИИ ===== */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ===== АДАПТИВНОСТЬ ===== */
+        @media (max-width: 992px) {
+            .about-content {
+                grid-template-columns: 1fr;
+            }
+            .hero h1 { font-size: 3.0rem; }
+        }
+
+        @media (max-width: 768px) {
+            .hero {
+                height: auto;
+                padding: 120px 0;
+            }
+            .hero h1 { font-size: 2.6rem; }
+            .hero p { font-size: 1.2rem; }
+            .hero-btns { flex-direction: column; align-items: center; }
+            .project-grid, .service-grid, .contact-content {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 576px) {
+            h1 { font-size: 2.2rem; }
+            h2 { font-size: 1.9rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ШАПКА -->
+    <header>
+        <div class="container header-content">
+            <div class="logo">Уралстройгарант</div>
+            <nav>
+                <ul>
+                    <li><a href="#projects">Проекты</a></li>
+                    <li><a href="#services">Услуги</a></li>
+                    <li><a href="#about">О компании</a></li>
+                    <li><a href="#contact">Контакты</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- ГЕРОЙ -->
+    <section class="hero" id="hero">
+        <div class="container hero-content">
+            <h1>Строим объекты<br>любой сложности</h1>
+            <p>От АЗС до ТЦ «Покровский Пассаж». 20+ лет. 50+ объектов. Екатеринбург.</p>
+            <div class="hero-btns">
+                <a href="#projects" class="btn">Наши проекты</a>
+                <a href="#contact" class="btn" style="background: transparent; color: white; border: 2px solid white;">Связаться</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ПРОЕКТЫ -->
+    <section class="projects section" id="projects">
+        <div class="container">
+            <h2>Наши проекты</h2>
+            <p>Реальные объекты. Реальные сроки. Без пафоса.</p>
+            <div class="project-grid">
+                <div class="project-card">
+                    <div class="project-img">Покровский Пассаж</div>
+                    <div class="project-info">
+                        <h3>ТЦ «Покровский Пассаж»</h3>
+                        <p>22 000 м². Строили 18 месяцев. Работали в дождь, снег и +40°C.</p>
+                    </div>
+                </div>
+                <div class="project-card">
+                    <div class="project-img">Технопарк «Южная»</div>
+                    <div class="project-info">
+                        <h3>Технопарк «Южная»</h3>
+                        <p>Центр ремонта техники. 450+ единиц. Строили за 11 месяцев — без задержек.</p>
+                    </div>
+                </div>
+                <div class="project-card">
+                    <div class="project-img">БЦ «Маршал»</div>
+                    <div class="project-info">
+                        <h3>Бизнес-центр «Маршал»</h3>
+                        <p>12 этажей, подземный паркинг. Строили в центре Екатеринбурга.</p>
+                    </div>
+                </div>
+                <div class="project-card">
+                    <div class="project-img">Усадьба Ощепкова</div>
+                    <div class="project-info">
+                        <h3>Усадьба Ощепкова</h3>
+                        <p>Реставрация XIX века. Фасады, лепнина, интерьеры. Работали вручную.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- УСЛУГИ -->
+    <section class="services section" id="services">
+        <div class="container">
+            <h2>Что делаем</h2>
+            <p>Полный цикл работ — от проекта до сдачи.</p>
+            <div class="service-grid">
+                <div class="service-item">
+                    <div class="service-icon">🏗️</div>
+                    <h3>Проектирование</h3>
+                    <p>Общественные, промышленные, производственные, культовые сооружения.</p>
+                </div>
+                <div class="service-item">
+                    <div class="service-icon">🔧</div>
+                    <h3>Строительство «под ключ»</h3>
+                    <p>Промышленные цеха, торговые центры, административные здания, АЗС.</p>
+                </div>
+                <div class="service-item">
+                    <div class="service-icon">⚙️</div>
+                    <h3>Инженерные системы</h3>
+                    <p>СКС, вентиляция, кондиционирование, отопление, водоснабжение.</p>
+                </div>
+                <div class="service-item">
+                    <div class="service-icon">🪨</div>
+                    <h3>Мозаика WaterJet</h3>
+                    <p>Изготовление мозаичных полов и стен на итальянском оборудовании.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- О КОМПАНИИ -->
+    <section class="about section" id="about">
+        <div class="container">
+            <div class="about-content">
+                <div>
+                    <h2>О компании</h2>
+                    <p>Основана в 2006 году в Екатеринбурге. Объединили специалистов в области проектирования, строительства, инженерии и отделки.</p>
+                    <p>Работаем с госзаказчиками, частными инвесторами и девелоперами. Реализовали проекты в Москве, Екатеринбурге, Краснодарском крае.</p>
+                </div>
+                <div style="height: 300px; background: #eee; display: flex; align-items: center; justify-content: center; color: var(--olive); font-weight: bold;">
+                    Фото: наша бригада на объекте
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- КОНТАКТЫ -->
+    <section class="contact section" id="contact">
+        <div class="container">
+            <h2>Связаться</h2>
+            <div class="contact-content">
+                <div class="contact-info">
+                    <h3>ООО «Уралстройгарант»</h3>
+                    <div class="contact-details">
+                        <div class="contact-item">
+                            <i>📍</i>
+                            <span>620014, г. Екатеринбург,<br>ул. Мамина-Сибиряка, 14б, офис 2</span>
+                        </div>
+                        <div class="contact-item">
+                            <i>📞</i>
+                            <span>+7 (343) 266-37-25</span>
+                        </div>
+                        <div class="contact-item">
+                            <i>📱</i>
+                            <span>+7 912 244-04-11<br>(Латыпов Ринат, контактное лицо)</span>
+                        </div>
+                        <div class="contact-item">
+                            <i>✉️</i>
+                            <span>uralsg1@yandex.ru</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="contact-form">
+                    <form>
+                        <input type="text" placeholder="Ваше имя" required>
+                        <input type="tel" placeholder="Телефон" required>
+                        <textarea placeholder="Опишите задачу: объект, площадь, сроки"></textarea>
+                        <button type="submit" class="btn">Отправить</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ФУТЕР -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-col">
+                    <h4>О компании</h4>
+                    <p>Строим объекты любой сложности с 2006 года.</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Реквизиты</h4>
+                    <div class="requisites">
+                        ИНН 6670134875<br>
+                        ОГРН 10696770134820<br>
+                        Лицензия Минкультуры № Л040-00103-00/00625679<br>
+                        СРО № СРО-С-109-11122009
+                    </div>
+                </div>
+                <div class="footer-col">
+                    <h4>Работаем по России</h4>
+                    <p>Екатеринбург, Москва, Краснодарский край</p>
+                </div>
+            </div>
+            <div class="copyright">
+                © 2026 ООО «Уралстройгарант». Все права защищены.
+            </div>
+        </div>
+    </footer>
+
+    <!-- АНИМАЦИИ ПРИ ПРОКРУТКЕ -->
+    <script>
+        const sections = document.querySelectorAll('.section');
+
+        const observer = new IntersectionObserver(
+            (entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            },
+            { threshold: 0.1 }
+        );
+
+        sections.forEach(section => {
+            observer.observe(section);
+        });
+
+        // Плавная прокрутка
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    window.scrollTo({
+                        top: target.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+    </script>
+
+</body>
+</html>
